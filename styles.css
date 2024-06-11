@@ -60,3 +60,13 @@ header select:focus,
 header select:active {
   outline: 0;
 }
+
+header .settings {
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+header .settings img {
+  width: 24px;
+  height: 24px;
+}
