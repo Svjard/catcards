@@ -95,3 +95,21 @@ header .settings img {
   background: #ffc500;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
 }
+
+.search-box {
+  display: flex;
+  justify-content: center;
+}
+
+.search-box input {
+  width: 50%;
+  font-family: "Open Sans", sans-serif !important;
+  color: #333;
+  font-weight: bold;
+  padding: 12px 20px;
+  font-size: 0.9rem;
+  border: 2px solid #333;
+  border-radius: 8px;
+  text-align: left;
+  outline: transparent;
+}
