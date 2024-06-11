@@ -40,3 +40,23 @@ header img {
   box-shadow: none;
   margin-left: 5px;
 }
+
+header select {
+  width: 100%;
+  background: transparent;
+  margin-right: 20px;
+  margin-bottom: 1em;
+  padding: 0.25em;
+  border: 0;
+  border-bottom: 2px solid #333;
+  color: #333;
+  font-weight: bold;
+  letter-spacing: 0.15em;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+header select:focus,
+header select:active {
+  outline: 0;
+}
