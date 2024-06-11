@@ -2,6 +2,8 @@
 
 > Coding Pagoda - Beginner [YouTube Videos](https://todo.com)
 
+More details can be found in the [product brief](https://github.com/Svjard/catcards/wiki/Product-Brief)
+
 A coding pagoda project that lets you utilize your skills to build a real-world application. To get started,
 
 1. Create a new repository called `catcards` in Github for yourself
@@ -19,6 +21,8 @@ You can work through the building out the application however you wish but a pro
 5. Go to the [backlog view](https://github.com/users/Svjard/projects/4/views/1) and copy issues over into your own repository. Yes this is tedious but Github doesn't provide a better way. Part of this exercise is to also absorb the project breakdown in having to copy over the content.
 6. Be sure to attach each issue you create to the correct milestone and the project you have created for yourself.
 7. Start Coding!
+
+Note that every issue has an associated PR to provide help along the way. Try not to look until you have put in an effort to complete each task on your own first though.
 
 ## Overview
 
