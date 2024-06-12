@@ -18,8 +18,7 @@
         <img src="images/logo.png" />
         <span>Cat Digital Cards</span>
       </div>
-      <select id="category">
-      </select>
+      <select id="category"></select>
       <div id="settings" class="settings">
         <img src="images/gear.svg" />
       </div>
@@ -28,42 +27,32 @@
       <div class="search-box">
         <input id="search" autocomplete="off" placeholder="Search..." />
       </div>
-      <div class="cards-container">
+      <div class="cards-container"></div>
+    </div>
+    <div id="settings-modal" class="modal">
+      <div class="modal-content">
+        <span id="modal-close" class="close">&times;</span>
+        <h3>Unit System Preference</h3>
+        <div class="option">
+          <input type="radio" name="uom" value="metric" checked /> Metric
+        </div>
+        <div class="option">
+          <input type="radio" name="uom" value="imperial" /> Imperial
+        </div>
+        <div class="centered">
+          <button id="modal-done">Done</button>
+        </div>
+      </div>
+    </div>
+    <template id="equipment-card">
+      <div class="card-container">
         <div class="card-inner">
           <div class="front">
             <div class="title-banner">
-              <span class="title">Lorem Ipsum</span>
+              <span class="title"></span>
             </div>
-            <img
-              class="machine-image"
-              src="https://s7d2.scene7.com/is/image/Caterpillar/CM20200115-87f0f-4fe22?$cc-g$&fmt=pjpeg"
-            />
-            <div class="facts">
-              <div class="fact">
-                <div class="fact-text">
-                  <div class="img-container">
-                    <img class="fact-icon" src="images/infopin2.png" /> Lorem
-                    Ipsum
-                  </div>
-                </div>
-              </div>
-              <div class="fact">
-                <div class="fact-text">
-                  <div class="img-container">
-                    <img class="fact-icon" src="images/infopin2.png" /> Lorem
-                    Ipsum
-                  </div>
-                </div>
-              </div>
-              <div class="fact">
-                <div class="fact-text">
-                  <div class="img-container">
-                    <img class="fact-icon" src="images/infopin2.png" /> Lorem
-                    Ipsum
-                  </div>
-                </div>
-              </div>
-            </div>
+            <img class="machine-image" src="" />
+            <div class="facts"></div>
             <div class="specification-btn">
               <button>Full Specifications</button>
             </div>
@@ -84,33 +73,10 @@
                 </svg>
               </div>
               <div class="section-control">
-                <select id="sections">
-                  <option>Lorem Ipsum</option>
-                </select>
+                <select id="sections"></select>
               </div>
             </div>
-            <ul class="specifications">
-              <li>
-                <span class="item">Lorem Ipsum</span>
-                <span class="value">10</span>
-              </li>
-              <li>
-                <span class="item">Lorem Ipsum</span>
-                <span class="value">10</span>
-              </li>
-              <li>
-                <span class="item">Lorem Ipsum</span>
-                <span class="value">10</span>
-              </li>
-              <li>
-                <span class="item">Lorem Ipsum</span>
-                <span class="value">10</span>
-              </li>
-              <li>
-                <span class="item">Lorem Ipsum</span>
-                <span class="value">10</span>
-              </li>
-            </ul>
+            <ul class="specifications"></ul>
             <div class="more">
               <button id="page-down">
                 <svg
@@ -144,22 +110,22 @@
           </div>
         </div>
       </div>
-    </div>
-    <div id="settings-modal" class="modal">
-      <div class="modal-content">
-        <span id="modal-close" class="close">&times;</span>
-        <h3>Unit System Preference</h3>
-        <div class="option">
-          <input type="radio" name="uom" value="metric" checked /> Metric
-        </div>
-        <div class="option">
-          <input type="radio" name="uom" value="imperial" /> Imperial
-        </div>
-        <div class="centered">
-          <button id="modal-done">Done</button>
+    </template>
+    <template id="equipment-fact">
+      <div class="fact">
+        <div class="fact-text">
+          <div class="img-container">
+            <img class="fact-icon" src="images/infopin2.png" />
+          </div>
         </div>
       </div>
-    </div>
+    </template>
+    <template id="equipment-specification">
+      <li>
+        <span class="item"></span>
+        <span class="value"></span>
+      </li>
+    </template>
     <script type="text/javascript" src="index.js"></script>
   </body>
 </html>

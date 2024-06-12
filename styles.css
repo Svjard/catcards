@@ -333,11 +333,11 @@ select {
 }
 
 .front {
-  display: none;
+  display: block;
 }
 
 .back {
-  display: block;
+  display: none;
 }
 
 .modal {
