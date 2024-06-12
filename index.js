@@ -74,6 +74,12 @@ function renderCards(equipment) {
     );
 
     container.appendChild(card);
+
+    const currentEl = container.lastElementChild;
+    currentEl.querySelector('.specification-btn').addEventListener('click', () => {
+      const inner = currentEl.querySelector('.card-inner').classList;
+      inner.add('is-flipped');
+    });
   });
 }
 

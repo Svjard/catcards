@@ -332,12 +332,26 @@ select {
   margin-left: -30px;
 }
 
-.front {
-  display: block;
+.front,
+.back {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .back {
-  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  transform: rotateY(180deg);
+  margin: 10px 0;
+}
+
+.is-flipped {
+  transform: rotateY(180deg) !important;
 }
 
 .modal {
