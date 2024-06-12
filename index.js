@@ -80,6 +80,11 @@ function renderCards(equipment) {
       const inner = currentEl.querySelector('.card-inner').classList;
       inner.add('is-flipped');
     });
+
+    currentEl.querySelector('.back-control').addEventListener('click', () => {
+      const inner = currentEl.querySelector('.card-inner').classList;
+      inner.remove('is-flipped');
+    });
   });
 }
 
