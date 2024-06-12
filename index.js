@@ -7,7 +7,22 @@ let equipmentData = [];
 function initializeHandlers() {
   const categoryDropdown = document.getElementById('category');
 
+  document.getElementById('search').addEventListener('keyup', (event) => {
+    const searchTxt = event.target.value;
+    
+    const cards = document.querySelectorAll('.card-container');
+    for (let i = 0; i < cards.length; i++) {
+      const name = cards[i].querySelector('.title').textContent;
+      if (searchTxt === '' || name.toLowerCase().includes(searchTxt.toLowerCase())) {
+        cards[i].style.display = 'flex';
+      } else {
+        cards[i].style.display = 'none';
+      }
+    }
+  });
+
   categoryDropdown.addEventListener('change', (event) => {
+    document.getElementById('search').value = '';
     renderCards(equipmentData.filter(d => d.category === event.target.value));
   });
 }
