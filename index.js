@@ -1,5 +1,15 @@
 let equipmentData = [];
 
+// Toggle the dialogs display to show or hide
+function toggleModalVisibility(on) {
+  const modal = document.getElementById('settings-modal');
+  if (on) {
+    modal.style.display = 'block';
+  } else {
+    modal.style.display = 'none';
+  }
+}
+
 /**
  * Setup the initial event listeners needed in the application for the
  * static HTML elements that allow us to interact with the content.
@@ -24,6 +34,10 @@ function initializeHandlers() {
   categoryDropdown.addEventListener('change', (event) => {
     document.getElementById('search').value = '';
     renderCards(equipmentData.filter(d => d.category === event.target.value));
+  });
+
+  document.getElementById('settings').addEventListener('click', () => {
+    toggleModalVisibility(true);
   });
 }
 
