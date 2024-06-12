@@ -39,6 +39,24 @@ function initializeHandlers() {
   document.getElementById('settings').addEventListener('click', () => {
     toggleModalVisibility(true);
   });
+
+  document.getElementById('modal-close').addEventListener('click', () => {
+    toggleModalVisibility(false);
+  });
+
+  document.getElementById('modal-done').addEventListener('click', () => {
+    toggleModalVisibility(false);
+  });
+
+  // provide a way for the user to click away when the settings modal is
+  // shown and auto dismiss it
+  window.onclick = (event) => {
+    const modal = document.getElementById('settings-modal');
+
+    if (event.target === modal) {
+      toggleModalVisibility(false);
+    }
+  };
 }
 
 /**
