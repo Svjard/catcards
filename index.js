@@ -85,6 +85,13 @@ function renderCards(equipment) {
       const inner = currentEl.querySelector('.card-inner').classList;
       inner.remove('is-flipped');
     });
+
+    currentEl.querySelector('#sections').addEventListener('change', (event) => {
+      renderSpecifications(
+        specs,
+        model.specifications.filter(s => s.category === event.target.value)
+      );
+    });
   });
 }
 
