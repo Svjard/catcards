@@ -1,6 +1,18 @@
 let equipmentData = [];
 
 /**
+ * Setup the initial event listeners needed in the application for the
+ * static HTML elements that allow us to interact with the content.
+ */
+function initializeHandlers() {
+  const categoryDropdown = document.getElementById('category');
+
+  categoryDropdown.addEventListener('change', (event) => {
+    renderCards(equipmentData.filter(d => d.category === event.target.value));
+  });
+}
+
+/**
  *  Renders the the specification details on the back of the equipment card.
  */
 function renderSpecifications(el, specifications) {
@@ -97,6 +109,8 @@ fetch('data/equipment.json')
 
     // Set the <select>'s value to the first category by default
     categoryDropdown.value = keys[0];
+
+    initializeHandlers();
 
     renderCards(equipmentData.filter(d => d.category === keys[0]));
   })
