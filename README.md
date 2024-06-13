@@ -48,6 +48,20 @@ will automatically be visible.
 
 All tests are written using cypress and live in the cypress/ folder. The focus of the tests is on capturing the major user interactions in the application and verifying correct functionality.
 
+To run the E2E tests locally follow these steps:
+
+In one console run
+
+```
+npm run start
+```
+
+In a seperate console run
+
+```
+npm run cypress
+```
+
 ## Deployment
 
 To get started with deployment first install the AWS CDK globally using the following
