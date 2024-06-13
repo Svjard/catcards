@@ -1,4 +1,6 @@
-let equipmentData = [];
+let equipmentData = [],
+    currentUom = 'metric',
+    cardViews = [];
 
 // Toggle the dialogs display to show or hide
 function toggleModalVisibility(on) {
@@ -48,6 +50,18 @@ function initializeHandlers() {
     toggleModalVisibility(false);
   });
 
+  // onchange of radio we should update the cards BUT we
+  // should keep flipped cards in their flipped state too
+  const uomOptions = document.querySelectorAll('input[name="uom"]');
+  for (let i = 0; i < uomOptions.length; i++) {
+    uomOptions[i].addEventListener('change', (event) => {
+      if (currentUom !== event.target.value) {
+        currentUom = event.target.value;
+        renderCards(equipmentData.filter(d => d.category === categoryDropdown.value));
+      }
+    });
+  }
+
   // provide a way for the user to click away when the settings modal is
   // shown and auto dismiss it
   window.onclick = (event) => {
@@ -70,7 +84,7 @@ function renderSpecifications(el, specifications) {
     const spec = specTemp.content.cloneNode(true);
     
     spec.querySelector('.item').innerHTML = s.label;
-    spec.querySelector('.value').innerHTML = s.metric;
+    spec.querySelector('.value').innerHTML = currentUom === 'imperial' ? s.us : s.metric;
 
     el.appendChild(spec);
   });
@@ -84,7 +98,7 @@ function renderCards(equipment) {
 
   container.replaceChildren();
 
-  equipment.forEach((model) => {
+  equipment.forEach((model, index) => {
     const cardTemp = document.getElementsByTagName('template')[0];
     const card = cardTemp.content.cloneNode(true);
 
@@ -96,7 +110,7 @@ function renderCards(equipment) {
       const factTemp = document.getElementsByTagName('template')[1];
       const fact = factTemp.content.cloneNode(true);
       
-      fact.querySelector('.fact-text').innerHTML += `${spec.label}: ${spec.metric}`;
+      fact.querySelector('.fact-text').innerHTML += `${spec.label}: ${currentUom === 'imperial' ? spec.us : spec.metric}`;
 
       facts.appendChild(fact);
     });
@@ -126,11 +140,13 @@ function renderCards(equipment) {
     currentEl.querySelector('.specification-btn').addEventListener('click', () => {
       const inner = currentEl.querySelector('.card-inner').classList;
       inner.add('is-flipped');
+      cardViews[index] = 1;
     });
 
     currentEl.querySelector('.back-control').addEventListener('click', () => {
       const inner = currentEl.querySelector('.card-inner').classList;
       inner.remove('is-flipped');
+      cardViews[index] = 0;
     });
 
     currentEl.querySelector('#sections').addEventListener('change', (event) => {
@@ -139,6 +155,11 @@ function renderCards(equipment) {
         model.specifications.filter(s => s.category === event.target.value)
       );
     });
+
+    if (cardViews[index]) {
+      const inner = currentEl.querySelector('.card-inner').classList;
+      inner.add('is-flipped');
+    }
   });
 }
 
