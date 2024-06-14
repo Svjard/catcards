@@ -1,7 +1,7 @@
 let equipmentData = [],
-    currentUom = 'metric',
-    cardViews = [];
+    currentUom = 'metric';
 
+const cardViews = [];
 const SCROLL = 200;
 
 // Toggle the dialogs display to show or hide

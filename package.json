@@ -9,6 +9,7 @@
     "build": "npx webpack",
     "cypress": "npx cypress open",
     "e2e": "npx cypress run",
+    "lint": "npx eslint index.js",
     "start": "cross-env BASE_URL=http://localhost:3000 npx webpack && cd dist && npx http-server --cors ."
   },
   "browserslist": {
@@ -23,10 +24,55 @@
       "last 1 safari version"
     ]
   },
+  "eslintConfig": {
+    "parserOptions": {
+      "requireConfigFile": false
+    },
+    "extends": [
+      "standard",
+      "prettier"
+    ],
+    "plugins": [
+      "import"
+    ],
+    "rules": {
+      "import/order": "error",
+      "no-console": "error",
+      "no-unused-vars": [
+        "error",
+        {
+          "ignoreRestSiblings": true
+        }
+      ],
+      "one-var": "off",
+      "no-var": "error",
+      "quotes": [
+        "error",
+        "single",
+        {
+          "avoidEscape": true
+        }
+      ]
+    },
+    "overrides": [
+      {
+        "files": "cypress/**/*.{test,spec}.js",
+        "env": {
+          "jest": true
+        },
+        "rules": {
+          "no-unused-expressions": "off"
+        }
+      }
+    ]
+  },
   "devDependencies": {
     "copy-webpack-plugin": "^12.0.2",
     "cross-env": "^7.0.3",
     "cypress": "^13.11.0",
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard": "^17.0.1",
     "puppeteer": "^22.10.0",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
