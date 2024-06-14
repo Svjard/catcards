@@ -27,6 +27,33 @@ describe('CatCards', () => {
     });
   });
 
+  describe('Search', () => {
+    it ('should have a search bar at top of the container', () => {
+      cy.visit('/');
+      cy.get('#search').should('exist');
+    });
+
+    it ('should hide cards when typing in the search bar', () => {
+      cy.visit('/');
+      cy.wait(300);
+
+      const search = cy.get('#search');
+      search.type('HD');
+      cy.get('.card-container[style*="display: flex"]').should('have.length', 1);
+      cy.get('.card-container[style*="display: none"]').should('have.length', 5);
+    });
+
+    it ('should show all cards when clearing search bar', () => {
+      cy.visit('/');
+      cy.wait(300);
+
+      const search = cy.get('#search');
+      search.clear('');
+      cy.get('.card-container[style*="display: flex"]').should('have.length', 6);
+      cy.get('.card-container[style*="display: none"]').should('have.length', 0);
+    });
+  });
+
   describe('Unit System Modal', () => {
     it('should open the modal when clicking the options icon', () => {
       cy.visit('/');
