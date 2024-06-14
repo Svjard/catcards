@@ -1,0 +1,21 @@
+name: Cat Cards Pipeline
+
+on:
+  push:
+    branches: [main, CAT*, cc*]
+  pull_request:
+    branches: [main, CAT*, cc*]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
