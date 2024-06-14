@@ -2,6 +2,8 @@ let equipmentData = [],
     currentUom = 'metric',
     cardViews = [];
 
+const SCROLL = 200;
+
 // Toggle the dialogs display to show or hide
 function toggleModalVisibility(on) {
   const modal = document.getElementById('settings-modal');
@@ -154,6 +156,14 @@ function renderCards(equipment) {
         specs,
         model.specifications.filter(s => s.category === event.target.value)
       );
+    });
+
+    currentEl.querySelector('#page-down').addEventListener('click', () => {
+      currentEl.querySelector('.specifications').scrollTop += SCROLL;
+    });
+
+    currentEl.querySelector('#page-up').addEventListener('click', () => {
+      currentEl.querySelector('.specifications').scrollTop -= SCROLL;
     });
 
     if (cardViews[index]) {
