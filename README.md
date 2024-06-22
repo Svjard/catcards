@@ -1,6 +1,8 @@
 # Cat Cards
 
-> Coding Pagoda - Beginner [YouTube Videos](https://todo.com)
+![main](https://github.com/Svjard/catcards/actions/workflows/main.yml/badge.svg)
+
+> Codivation Academy - Beginner [YouTube Videos](https://todo.com)
 
 More details can be found in the [product brief](https://github.com/Svjard/catcards/wiki/Product-Brief)
 
@@ -64,11 +66,90 @@ npm run cypress
 
 ## Deployment
 
-To get started with deployment first install the AWS CDK globally using the following
-command:
+In order to setup deployment for this application, you require an AWS account. You also will need a registered domain in Route53 as well to deploy the application.
+
+The deployment script is setup to use a certificate already setup via Certificate Manager in AWS for the domain. You can change the cloudformation to generate a certificate if you want an extra challenge.
+
+The AWS key/secret are setup as [secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions) in the repository. The Hosted Zone, Certificate and Domain are all setup as [variables](https://docs.github.com/en/actions/learn-github-actions/variables) in the repository.
+
+You will need the user associated with the key/secret to have the correct policy setup to deploy the application. A minimal policy can be found below with specific IDs being obfuscated (e.g. `<ID>`).
 
 ```
-npm install -g aws-cdk
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Cloudformation",
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:CreateChangeSet",
+                "cloudformation:CreateStack",
+                "cloudformation:DeleteChangeSet",
+                "cloudformation:DeleteStack",
+                "cloudformation:DescribeChangeSet",
+                "cloudformation:DescribeStacks",
+                "cloudformation:ExecuteChangeSet",
+                "cloudformation:GetTemplateSummary",
+                "cloudformation:UpdateStack"
+            ],
+            "Resource": [
+                "arn:aws:cloudformation:us-east-1:*:stack/catcards/*"
+            ]
+        },
+        {
+            "Sid": "CloudfrontOrigin",
+            "Effect": "Allow",
+            "Action": [
+                "cloudfront:*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "ACM",
+            "Effect": "Allow",
+            "Action": [
+                "acm:DescribeCertificate"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "S3",
+            "Effect": "Allow",
+            "Action": [
+                "s3:CreateBucket",
+                "s3:DeleteBucket",
+                "s3:GetBucketPolicy",
+                "s3:GetBucketPolicyStatus",
+                "s3:GetBucketTagging",
+                "s3:GetEncryptionConfiguration",
+                "s3:PutBucketPolicy",
+                "s3:PutBucketTagging",
+                "s3:PutEncryptionConfiguration",
+                "s3:TagResource",
+                "s3:UntagResource"
+            ],
+            "Resource": "arn:aws:s3:::catcards*"
+        },
+        {
+            "Sid": "Route53",
+            "Effect": "Allow",
+            "Action": [
+                "route53:ChangeResourceRecordSets",
+                "route53:GetHostedZone",
+                "route53:ListResourceRecordSets"
+            ],
+            "Resource": "arn:aws:route53:::hostedzone/<ID>"
+        },
+        {
+            "Sid": "Route53Changes",
+            "Effect": "Allow",
+            "Action": [
+                "route53:GetChange"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
 ```
 
 ## Scripts

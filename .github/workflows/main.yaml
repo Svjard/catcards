@@ -47,3 +47,32 @@ jobs:
         with:
           name: cypress-videos
           path: ./cypress/videos
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [verify, cypress]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build --production
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Run cloudformation deployment resources
+        run: |
+          aws cloudformation deploy --stack-name catcards --no-fail-on-empty-changeset --template-file ./deployment/main.yml --debug --parameter-overrides DomainName=${{ vars.DOMAIN_NAME }} SubDomain=catcards HostedZoneId=${{ vars.HOSTED_ZONE_ID }} CertificateArn=${{ vars.CERTIFICATE_ARN }}
+      - name: Copy Over Content to the S3 Bucket
+        run: |
+          aws s3 sync dist s3://catcards.${{ vars.DOMAIN_NAME }}
+      - name: Invalidate CDN
+        run: |
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions | jq -r '.DistributionList.Items[] | select( .Aliases.Items[0] | contains("catcards.${{ vars.DOMAIN_NAME }}") ) | .Id')
+          aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/"
