@@ -68,10 +68,10 @@ jobs:
           aws-region: us-east-1
       - name: Run cloudformation deployment resources
         run: |
-          aws cloudformation update-stack --stack-name catcards --template-body file://deployment/main.yml --parameters ParameterKey=DomainName,ParameterValue=codingpagoda.com ParameterKey=SubDomain
+          aws cloudformation deploy --stack-name catcards --no-fail-on-empty-changeset --template-file ./deployment/main.yml --parameter-overrides DomainName=codingpagoda.com SubDomain=catcards HostedZoneId=Z05699651B4FRDCG1UMIK
       - name: Copy Over Content to the S3 Bucket
         run: |
-          aws s3 sync dist s3://catcards.codingpagoda.com
+          aws s3 sync dist s3://catcards.codivationacademy.com
       - name: Invalidate CDN
         run: |
           DISTRIBUTION_ID=$(aws cloudfront list-distributions | jq -r '.DistributionList.Items[] | select( .Aliases.Items[0] | contains("${{ vars.USERID }}.codivationacademy.com") ) | .Id')

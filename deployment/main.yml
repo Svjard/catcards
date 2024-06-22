@@ -11,11 +11,6 @@ Metadata:
           - SubDomain
           - DomainName
 
-Mappings:
-  Solution:
-    Constants:
-      Version: "v0.12"
-
 Rules:
   OnlyUsEast1:
     Assertions:
@@ -39,70 +34,98 @@ Parameters:
   HostedZoneId:
     Description: HostedZoneId for the domain e.g. Z23ABC4XYZL05B
     Type: String
+  CertificateArn:
+    Type: String
 
 Resources:
-  CustomResourceStack:
-    Type: AWS::CloudFormation::Stack
+  Bucket:
+    Type: AWS::S3::Bucket
     Properties:
-      TemplateURL: ./custom-resource.yaml
+      AccessControl: Private
+      BucketName: !Sub "${SubDomain}.${DomainName}"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
       Tags:
         - Key: Solution
           Value: ACFS3
 
-  AcmCertificateStack:
-    Type: AWS::CloudFormation::Stack
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
     Properties:
-      TemplateURL: ./acm-certificate.yaml
-      Parameters:
-        SubDomain: !Ref SubDomain
-        DomainName: !Ref DomainName
-        CreateApex: !Ref CreateApex
-        HostedZoneId: !Ref HostedZoneId
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: s3:GetObject
+            Principal:
+              Service: "cloudfront.amazonaws.com"
+            Effect: Allow
+            Resource: !Sub "${Bucket.Arn}/*"
+            Condition:
+              StringEquals:
+                "AWS:SourceArn": !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}"
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Sub "${SubDomain}.${DomainName}"
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+          Compress: true
+          DefaultTTL: 86400
+          ForwardedValues:
+            QueryString: true
+          MaxTTL: 31536000
+          TargetOriginId: s3Origin
+          ViewerProtocolPolicy: "redirect-to-https"
+        CustomErrorResponses:
+          - ErrorCachingMinTTL: 60
+            ErrorCode: 404
+            ResponseCode: 404
+            ResponsePagePath: "/404.html"
+        Enabled: true
+        HttpVersion: "http2"
+        DefaultRootObject: "index.html"
+        IPV6Enabled: true
+        Origins:
+          - DomainName: !GetAtt Bucket.DomainName
+            Id: s3Origin
+            OriginAccessControlId: !Ref OriginAccessControl
+            S3OriginConfig: {}
+        PriceClass: "PriceClass_All"
+        ViewerCertificate:
+          AcmCertificateArn: !Ref CertificateArn
+          MinimumProtocolVersion: "TLSv1.1_2016"
+          SslSupportMethod: "sni-only"
       Tags:
         - Key: Solution
           Value: ACFS3
 
-  CloudFrontStack:
-    Type: AWS::CloudFormation::Stack
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
     Properties:
-      TemplateURL: ./cloudfront-site.yaml
-      Parameters:
-        CertificateArn: !GetAtt AcmCertificateStack.Outputs.CertificateArn
-        DomainName: !Ref DomainName
-        SubDomain: !Ref SubDomain
-        S3BucketRoot: !GetAtt CustomResourceStack.Outputs.S3BucketRoot
-        S3BucketRootName: !GetAtt CustomResourceStack.Outputs.S3BucketRootName
-        S3BucketRootArn: !GetAtt CustomResourceStack.Outputs.S3BucketRootArn
-        S3BucketLogs: !GetAtt CustomResourceStack.Outputs.S3BucketLogs
-        S3BucketLogsName: !GetAtt CustomResourceStack.Outputs.S3BucketLogsName
-      Tags:
-        - Key: Solution
-          Value: ACFS3
+      OriginAccessControlConfig:
+        # Get a unique ID for the OAC Config name.
+        # Name must be unique within account
+        Name: !Sub
+          - amzn-catcards-${guid}
+          - guid: !Select [2, !Split ["/", !Ref "AWS::StackId"]]
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
 
-Outputs:
-  SolutionVersion:
-    Value: !FindInMap [Solution, Constants, Version]
-  CopyFunction:
-    Description: S3 helper function
-    Value: !GetAtt CustomResourceStack.Outputs.CopyFunction
-  S3BucketLogs:
-    Description: Logging bucket
-    Value: !GetAtt CustomResourceStack.Outputs.S3BucketLogs
-  S3BucketRoot:
-    Description: Website bucket
-    Value: !GetAtt CustomResourceStack.Outputs.S3BucketRoot
-  S3BucketLogsName:
-    Description: Logging bucket name
-    Value: !GetAtt CustomResourceStack.Outputs.S3BucketLogsName
-  S3BucketRootName:
-    Description: Website bucket name
-    Value: !GetAtt CustomResourceStack.Outputs.S3BucketRootName
-  CertificateArn:
-    Description: Issued certificate
-    Value: !GetAtt AcmCertificateStack.Outputs.CertificateArn
-  CFDistributionName:
-    Description: CloudFront distribution
-    Value: !GetAtt CloudFrontStack.Outputs.CloudFrontDistribution
-  CloudFrontDomainName:
-    Description: Website address
-    Value: !GetAtt CloudFrontStack.Outputs.CloudFrontDomainName
+  CNameRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Sub "${SubDomain}.${DomainName}"
+      Type: "CNAME"
+      ResourceRecords:
+        - !GetAtt CloudFrontDistribution.DomainName
+      TTL: "900"
