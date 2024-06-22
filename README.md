@@ -1,6 +1,6 @@
 # Cat Cards
 
-> Coding Pagoda - Beginner [YouTube Videos](https://todo.com)
+> Codivation Academy - Beginner [YouTube Videos](https://todo.com)
 
 More details can be found in the [product brief](https://github.com/Svjard/catcards/wiki/Product-Brief)
 
@@ -47,15 +47,6 @@ will automatically be visible.
 ## Testing
 
 All tests are written using cypress and live in the cypress/ folder. The focus of the tests is on capturing the major user interactions in the application and verifying correct functionality.
-
-## Deployment
-
-To get started with deployment first install the AWS CDK globally using the following
-command:
-
-```
-npm install -g aws-cdk
-```
 
 ## Scripts
 
