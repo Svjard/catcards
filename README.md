@@ -63,7 +63,7 @@ The output will stored into data/equipment.json.
 ## Further Exercises
 
 - Provide an "All" selector in the dropdown in the header for the user to see all equipment at once
-- Change the equipment name in the header of the card to be a direct link to the official website, i.e. have the link open in a new tab/window
+- Change the equipment name in the header of the card to be a direct link to the official website, i.e. have the link open in a new tab/window. See the "directLink" field in the data/equipment.json file.
 - Allow the user to click the equipment image and see the full size image, see https://www.w3schools.com/howto/howto_css_modal_images.asp for inspiration
 - Improve your deployment
   - Add logging to your cloudfront distribution
