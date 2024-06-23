@@ -59,3 +59,12 @@ node scripts/scaper.js
 ```
 
 The output will stored into data/equipment.json.
+
+## Further Exercises
+
+- Provide an "All" selector in the dropdown in the header for the user to see all equipment at once
+- Change the equipment name in the header of the card to be a direct link to the official website, i.e. have the link open in a new tab/window
+- Allow the user to click the equipment image and see the full size image, see https://www.w3schools.com/howto/howto_css_modal_images.asp for inspiration
+- Improve your deployment
+  - Add logging to your cloudfront distribution
+  - Add a [response headers policy](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudfront-responseheaderspolicy.html) to cloudfront distrubution to improve security
